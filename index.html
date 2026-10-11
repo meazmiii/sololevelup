@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#090b10" />
+    <meta name="description" content="SoloLevelUp — bangkit hari ini, jadi lebih kuat dari kemarin." />
+    <title>SoloLevelUp — Your next level starts here</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="progression.css" />
+    <script defer src="app.js?v=9"></script>
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="#dashboard" aria-label="SoloLevelUp beranda"><span class="brand-wordmark" data-text="SOLOLEVELUP">SOLOLEVELUP</span></a>
+      <nav class="main-nav" aria-label="Navigasi utama"><a class="nav-link active" href="#dashboard">Dashboard</a><a class="nav-link" href="#missions">Misi</a><a class="nav-link" href="#history">Riwayat</a></nav>
+      <div class="player-chip"><span class="player-avatar">H</span><span class="player-copy"><small>HUNTER RANK</small><strong id="header-rank">E-RANK</strong></span><span class="online-dot" aria-label="Siap"></span></div>
+    </header>
+
+    <main id="dashboard" class="dashboard">
+      <section class="welcome-row">
+        <div class="welcome-copy-block"><p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM ONLINE <span id="today-label"></span></p><h1>ARISE<span class="title-accent">.</span></h1><p class="welcome-copy">Bangkit hari ini. Jadi lebih kuat dari kemarin.</p></div>
+        <div class="hero-hunter-stage"><div id="hero-portrait-slot" class="hero-portrait-slot" aria-label="Hunter rank yang sedang dipilih"></div><div class="streak-card"><span class="streak-icon" aria-hidden="true">✳</span><div><strong id="streak-value">0 <small>HARI</small></strong><span>STREAK LATIHAN</span></div></div></div>
+      </section>
+
+      <section class="hero-grid" aria-label="Level dan statistik">
+        <article class="panel level-panel">
+          <div class="panel-topline"><span class="eyebrow">PLAYER STATUS</span><span id="player-status-tag" class="status-tag"><i></i> ACTIVE</span></div>
+          <div class="level-content"><div class="level-seal" aria-hidden="true"><div class="seal-inner"><span>RANK</span><strong id="rank-letter">E</strong></div></div><div class="level-copy"><span class="level-kicker">CURRENT RANK</span><h2 id="rank-name">E-RANK HUNTER</h2><div class="level-number"><span id="level-label">RANK XP</span> <strong id="level-number">0 / 100</strong><span id="rank-sublevel"> · NEXT: D-RANK</span></div><div class="xp-track" role="progressbar" aria-label="Progres menuju rank berikutnya" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="xp-progress"></span></div><div class="xp-labels"><span id="xp-current">0 / 100 XP</span><span id="xp-next">100 XP TO D-RANK</span></div></div></div>
+          <div id="hunter-portrait" class="hunter-portrait" data-rank="E" role="img" aria-label="Potret hunter orisinal rank E" hidden>
+              <svg viewBox="0 0 160 180" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="portrait-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#222635"/><stop offset="1" stop-color="#0d1018"/></linearGradient>
+                  <linearGradient id="portrait-cloth" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#535768"/><stop offset="1" stop-color="#171a24"/></linearGradient>
+                  <linearGradient id="portrait-armor" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8c9ec"/><stop offset=".48" stop-color="#596a8f"/><stop offset="1" stop-color="#222b40"/></linearGradient>
+                  <radialGradient id="portrait-aura"><stop offset="0" stop-color="#8c74ff" stop-opacity=".45"/><stop offset="1" stop-color="#8c74ff" stop-opacity="0"/></radialGradient>
+                  <filter id="portrait-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <path class="portrait-backdrop" d="M16 18 80 6l64 12v127l-64 25-64-25z" fill="url(#portrait-bg)" stroke="currentColor" stroke-opacity=".34"/>
+                <ellipse class="portrait-aura aura-low" cx="81" cy="91" rx="66" ry="72" fill="url(#portrait-aura)"/>
+                <g class="portrait-energy" fill="none" stroke="currentColor" stroke-linecap="round" filter="url(#portrait-glow)">
+                  <path d="m28 119 17-32-5-17M131 126l-13-31 10-18M35 54l14 13M126 52l-13 17" stroke-width="2"/>
+                  <path class="energy-crown" d="m47 48 9-22 13 18 11-29 12 29 14-18 8 22" stroke-width="2.5"/>
+                  <path class="energy-wings" d="M50 85 25 61l9 35-20-10 28 37M110 85l25-24-9 35 20-10-28 37" stroke-width="2"/>
+                </g>
+                <path class="portrait-cape" d="M48 91 23 119l12 47 31-12 14 8 13-8 31 12 13-47-25-28-28 13z" fill="#161923" stroke="#6f638d" stroke-opacity=".5"/>
+                <path class="portrait-hood" d="M51 75 46 44Q51 22 80 19q29 3 34 25l-5 32-12 21H58z" fill="#242936" stroke="#747b8d" stroke-width="2"/>
+                <path class="portrait-hair" d="M49 52q-4-22 13-28l-2-12 16 8 6-12 9 13q20 1 24 22l-8 13-8-11-16 8-18-4-9 16z" fill="#10131b" stroke="#777f94" stroke-width="1.4"/>
+                <path class="portrait-face" d="m60 52 8-8 12 4 12-4 8 8-3 24q-6 16-17 19-11-3-17-19z" fill="#9a9bab" stroke="#d4d7e2" stroke-opacity=".55"/>
+                <path class="portrait-mask" d="m57 69 14-3 9 5 9-5 14 3-3 16q-8 12-20 13-12-1-20-13z" fill="#222630" opacity=".92"/>
+                <path class="portrait-eyes" d="m65 60 11 2m8 0 11-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" filter="url(#portrait-glow)"/>
+                <path class="portrait-neck" d="m68 89-3 13 15 11 15-11-3-13" fill="#74798c"/>
+                <path class="portrait-torso" d="m59 99 21 12 21-12 24 13 11 48-32-10-24 13-24-13-32 10 11-48z" fill="url(#portrait-cloth)" stroke="#73798d" stroke-width="1.5"/>
+                <path class="portrait-collar" d="m59 99 21 12 21-12-7 24-14 8-14-8z" fill="#2b2e39" stroke="#9498a7" stroke-opacity=".6"/>
+                <g class="armor-d"><path d="m44 109-18 9 8 21 19-6 7-20zm72 0 18 9-8 21-19-6-7-20z" fill="#63708d" stroke="#b7c3dc" stroke-width="2"/></g>
+                <g class="armor-c"><path d="m56 119 14 10-5 25-20-7zm48 0-14 10 5 25 20-7z" fill="url(#portrait-armor)" stroke="#bac7e0" stroke-width="1.5"/><path d="m74 126 6 5 6-5 5 24-11 10-11-10z" fill="#29344b" stroke="#c1cce2"/></g>
+                <g class="armor-b"><path d="m37 108-13 9 9 26 24-3 6-17-10-12zm86 0 13 9-9 26-24-3-6-17 10-12z" fill="#303a52" stroke="#b7c8ec" stroke-width="2.5"/><path d="m65 113 15 8 15-8 8 16-9 27-14 8-14-8-9-27z" fill="url(#portrait-armor)" stroke="#d0d9ec" stroke-width="1.5"/></g>
+                <g class="armor-a"><path d="m39 104-19 11 7 34 23-5 11-20zm82 0 19 11-7 34-23-5-11-20z" fill="#252d40" stroke="#c7d2ea" stroke-width="3"/><path d="m66 110 14 9 14-9 9 20-10 30-13 8-13-8-10-30z" fill="#a2b5dc" stroke="#eff4ff" stroke-width="2"/><path d="m80 121 7 12-7 17-7-17z" fill="#202a42" stroke="#e1e9fb" stroke-width="1.5"/></g>
+                <g class="armor-s"><path d="m31 103-18 15 11 37 22-6 9-17zm98 0 18 15-11 37-22-6-9-17z" fill="#171c29" stroke="#e6d39d" stroke-width="2.5"/><path d="m58 105 22 13 22-13 14 23-17 39-19 9-19-9-17-39z" fill="#22243a" stroke="#e5d6ac" stroke-width="2"/><path d="m80 122 11 14-11 27-11-27z" fill="#bba9ef" stroke="#f2e9ff" stroke-width="1.5"/></g>
+                <g class="armor-splus"><path d="M80 10 88 31l22-12-8 25 24-1-19 17-27-9-27 9-19-17 24 1-8-25 22 12z" fill="#bba9ef" fill-opacity=".14" stroke="#d8c5ff" stroke-width="2"/><path d="m29 90-12-20 18 8m96 12 12-20-18 8" fill="none" stroke="#dfd1ff" stroke-width="3" filter="url(#portrait-glow)"/></g>
+              </svg>
+              <span id="portrait-rank" class="portrait-rank">E</span>
+            </div>
+          <div class="rank-ladder-wrap"><div class="rank-ladder-caption"><span>PILIH RANK UNTUK LIHAT TAMPILANNYA</span><span id="rank-rule-caption">XP UNTUK NAIK RANK</span></div><ol id="rank-ladder" class="rank-ladder" aria-label="Pilih rank untuk melihat pratinjau"><li data-rank-step="E"><button type="button" aria-label="Preview E-Rank" aria-pressed="false">E</button></li><li data-rank-step="D"><button type="button" aria-label="Preview D-Rank" aria-pressed="false">D</button></li><li data-rank-step="C"><button type="button" aria-label="Preview C-Rank" aria-pressed="false">C</button></li><li data-rank-step="B"><button type="button" aria-label="Preview B-Rank" aria-pressed="false">B</button></li><li data-rank-step="A"><button type="button" aria-label="Preview A-Rank" aria-pressed="false">A</button></li><li data-rank-step="S"><button type="button" aria-label="Preview S-Rank" aria-pressed="false">S</button></li><li data-rank-step="S+"><button type="button" aria-label="Preview S-Rank star" aria-pressed="false">★</button></li></ol><div id="rank-preview-note" class="rank-preview-note" hidden><span>PREVIEW MODE · Progres asli lo tetap aman.</span><button id="exit-rank-preview" type="button">KEMBALI KE RANK GUE ↗</button></div></div>
+          <div class="level-footer"><span>⚡ <strong id="total-xp">0</strong> TOTAL XP · <strong id="total-quests">0</strong> QUESTS</span><span id="total-days">0 TRAINING DAYS</span></div>
+        </article>
+        <article class="panel stat-panel"><div class="panel-topline"><span class="eyebrow">TODAY'S PROGRESS</span><span class="stat-period" id="today-rank">E-RANK</span></div><div class="daily-summary"><div class="daily-summary-icon">✦</div><div class="daily-summary-copy"><span>QUESTS CLEARED TODAY</span><strong><span id="today-completed">0</span><small> / 4</small></strong></div><div class="daily-xp"><strong>+<span id="today-xp">0</span> XP</strong><span>1 XP PER QUEST</span></div></div><div class="daily-summary-track"><span id="today-progress"></span></div><p class="daily-summary-note">Target quest menyesuaikan rank aktif · Reset setiap hari</p></article>
+      </section>
+
+      <section id="missions" class="section-heading mission-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> DAILY TRAINING</p><h2>System quest.</h2></div><span class="refresh-label" id="daily-reset-label">4 QUESTS · +1 XP EACH</span></section>
+      <section class="system-quest-panel" aria-label="Panel system daily quest">
+        <div class="system-panel-head"><span><i></i> SYSTEM / DAILY QUEST</span><span id="quest-panel-date">QUEST PROTOCOL · 001</span></div>
+        <div class="system-panel-title"><div><span class="system-panel-kicker">PLAYER CONDITIONING PROGRAM</span><h3>Daily training protocol</h3><p>Selesaikan target hari ini untuk memperkuat hunter-mu.</p></div><div class="system-total-reward"><strong>+<span id="available-xp">4</span></strong><span>XP AVAILABLE</span></div></div>
+        <div class="system-progress-copy"><span id="system-progress-label">QUESTS COMPLETED <strong>0 / 4</strong></span><span id="system-progress-percent">0%</span></div>
+        <div class="system-progress-track"><span id="system-progress-bar"></span></div>
+        <div id="mission-list" class="system-quest-list" role="list" aria-label="Daily quest latihan"></div>
+        <div class="system-panel-footer"><span><i>!</i> Checklist manual — tandai DONE setelah target sungguh tercapai.</span><span>DAILY RESET · 00:00</span></div>
+      </section>
+
+      <section id="history" class="section-heading history-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> YOUR RECORD</p><h2>Hari-hari lo makin kuat.</h2></div><span class="section-index">DAILY QUEST HISTORY</span></section>
+      <section class="panel history-panel"><div class="history-head"><span>DATE</span><span>QUESTS DONE</span><span>XP EARNED</span></div><div id="history-list"></div><div id="empty-history" class="empty-history"><span>◇</span><strong>Hari pertama lo dimulai sekarang.</strong><p>Selesaikan daily quest untuk mulai ngumpulin XP.</p></div></section>
+      <footer class="footer-note"><span>SOLOLEVELUP <i>×</i> YOUR NEXT LEVEL</span><span>BUILT FOR THE HUNTER IN YOU.</span></footer>
+    </main>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
