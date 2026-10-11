@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "SoloLevelUp — Daily Hunter Training",
+  "short_name": "SoloLevelUp",
+  "description": "Daily training quests, XP, and rank progression.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090b10",
+  "theme_color": "#090b10",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

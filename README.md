@@ -16,7 +16,9 @@ Buka `http://localhost:8000`, selesaikan latihan, lalu tekan **DONE** pada masin
 
 Repo ini dipublikasikan sebagai situs statis melalui workflow GitHub Actions. **Settings → Pages → Build and deployment → Source** harus memakai **GitHub Actions**. Setiap push ke branch `main` akan men-deploy aplikasi ke `https://<username>.github.io/sololevelup/`.
 
-Website dan source repo bersifat publik. Progres quest hanya disimpan di `localStorage` browser yang sedang dipakai; tidak ada akun atau sinkronisasi antarperangkat. Jangan menyimpan data sensitif di repo.
+Di Android, buka URL itu di Chrome lalu pilih **Install app** atau **Add to Home screen**. Di iPhone, buka di Safari, pilih **Share → Add to Home Screen**. App shell di-cache untuk akses offline; progres quest tetap disimpan di `localStorage` browser yang memasang app.
+
+Website dan source repo bersifat publik. Progres tidak disinkronkan antarperangkat dan tidak ada akun. Jangan menyimpan data sensitif di repo.
 
 ## Progression
 

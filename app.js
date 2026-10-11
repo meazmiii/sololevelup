@@ -368,3 +368,11 @@ renderDashboard();
 if (legacyProgressNotice) {
   showToast("Daily quest baru aktif. XP latihan lama tetap aman, tapi progres quest dimulai dari 0.");
 }
+
+if ("serviceWorker" in navigator && window.location.protocol === "https:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((error) => {
+      console.error("SoloLevelUp could not enable offline support.", error);
+    });
+  });
+}
