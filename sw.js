@@ -1,4 +1,4 @@
-const CACHE_NAME = "sololevelup-shell-v1";
+const CACHE_NAME = "sololevelup-shell-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -7,6 +7,9 @@ const APP_SHELL = [
   "./app.js",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./apple-touch-icon.png",
 ];
 
 self.addEventListener("install", (event) => {
