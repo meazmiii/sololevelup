@@ -14,7 +14,7 @@ Buka `http://localhost:8000`, selesaikan latihan, lalu tekan **DONE** pada masin
 
 ## GitHub Pages
 
-Repo ini bisa dipublikasikan sebagai situs statis melalui workflow GitHub Actions. Push branch `main` ke repo GitHub, lalu pastikan **Settings → Pages → Build and deployment → Source** memakai **GitHub Actions**. Setelah workflow `Deploy SoloLevelUp to GitHub Pages` berhasil, aplikasinya tersedia di `https://<username>.github.io/sololevelup/`.
+Repo ini dipublikasikan sebagai situs statis melalui workflow GitHub Actions. **Settings → Pages → Build and deployment → Source** harus memakai **GitHub Actions**. Setiap push ke branch `main` akan men-deploy aplikasi ke `https://<username>.github.io/sololevelup/`.
 
 Website dan source repo bersifat publik. Progres quest hanya disimpan di `localStorage` browser yang sedang dipakai; tidak ada akun atau sinkronisasi antarperangkat. Jangan menyimpan data sensitif di repo.
 
