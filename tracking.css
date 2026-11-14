@@ -1,0 +1,6 @@
+.system-quest-action.tracking{border-color:#a18aff;background:linear-gradient(135deg,#302843,#211d30);color:#e2d7ff;box-shadow:0 0 15px rgba(161,138,255,.15)}
+.system-quest-action.tracking:hover,.system-quest-action.tracking:focus-visible{border-color:#c0afff;background:#3a3050}
+.system-quest-row.has-manual-step{grid-template-columns:34px minmax(0,1fr) minmax(100px,.5fr) 65px minmax(160px,190px)}
+.system-quest-actions{display:flex;gap:6px;min-width:0}
+.system-quest-actions .system-quest-action{flex:1;min-width:0;padding-inline:5px;font-size:7px}
+@media(max-width:560px){.system-quest-row.has-manual-step{grid-template-columns:28px minmax(0,1fr) 70px}.system-quest-actions{grid-column:2/4;grid-row:2}.system-quest-actions .system-quest-action{grid-column:auto;grid-row:auto;min-height:27px;margin:0;padding-inline:4px;font-size:7px}}

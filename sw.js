@@ -1,9 +1,10 @@
-const CACHE_NAME = "sololevelup-shell-v2";
+const CACHE_NAME = "sololevelup-shell-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./progression.css",
+  "./tracking.css",
   "./app.js",
   "./manifest.webmanifest",
   "./icon.svg",

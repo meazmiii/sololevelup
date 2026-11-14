@@ -18,13 +18,14 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="progression.css" />
-    <script defer src="app.js?v=10"></script>
+    <link rel="stylesheet" href="tracking.css" />
+    <script defer src="app.js?v=11"></script>
   </head>
   <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
     <div class="ambient ambient-two" aria-hidden="true"></div>
     <header class="topbar">
-      <a class="brand" href="#dashboard" aria-label="SoloLevelUp beranda"><span class="brand-wordmark" data-text="SOLOLEVELUP">SOLOLEVELUP</span></a>
+      <a class="brand" href="#dashboard" aria-label="SoloLevelUp beranda"><span class="brand-wordmark" data-text="SL">SL</span></a>
       <nav class="main-nav" aria-label="Navigasi utama"><a class="nav-link active" href="#dashboard">Dashboard</a><a class="nav-link" href="#missions">Misi</a><a class="nav-link" href="#history">Riwayat</a></nav>
       <div class="player-chip"><span class="player-avatar">H</span><span class="player-copy"><small>HUNTER RANK</small><strong id="header-rank">E-RANK</strong></span><span class="online-dot" aria-label="Siap"></span></div>
     </header>
@@ -86,7 +87,7 @@
         <div class="system-progress-copy"><span id="system-progress-label">QUESTS COMPLETED <strong>0 / 4</strong></span><span id="system-progress-percent">0%</span></div>
         <div class="system-progress-track"><span id="system-progress-bar"></span></div>
         <div id="mission-list" class="system-quest-list" role="list" aria-label="Daily quest latihan"></div>
-        <div class="system-panel-footer"><span><i>!</i> Checklist manual — tandai DONE setelah target sungguh tercapai.</span><span>DAILY RESET · 00:00</span></div>
+        <div class="system-panel-footer"><span><i>!</i> Langkah bisa ditrack otomatis atau ditandai manual; quest lain tetap manual.</span><span>DAILY RESET · 00:00</span></div>
       </section>
 
       <section id="history" class="section-heading history-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> YOUR RECORD</p><h2>Hari-hari lo makin kuat.</h2></div><span class="section-index">DAILY QUEST HISTORY</span></section>

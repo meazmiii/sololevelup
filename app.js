@@ -9,7 +9,7 @@ const RANKS = [
   { name: "S", xpToAdvance: 220, steps: 15000, pushups: 100, situps: 100, squats: 150, accent: "#ffce76" },
 ];
 const QUESTS = [
-  { id: "steps", title: "Langkah kaki", icon: "↗", unit: "LANGKAH", target: (rank) => rank.steps, description: "Jalan kaki sepanjang hari. Hitungan perangkat, dicentang sendiri." },
+  { id: "steps", title: "Langkah kaki", icon: "↗", unit: "LANGKAH", target: (rank) => rank.steps, description: "Mulai tracking, lalu bawa ponsel saat berjalan." },
   { id: "pushups", title: "Push-up", icon: "↑", unit: "REPETISI", target: (rank) => rank.pushups, description: "Bisa dicicil beberapa set sampai target hari ini selesai." },
   { id: "situps", title: "Sit-up", icon: "⌁", unit: "REPETISI", target: (rank) => rank.situps, description: "Bisa dicicil beberapa set sampai target hari ini selesai." },
   { id: "squats", title: "Squat", icon: "↓", unit: "REPETISI", target: (rank) => rank.squats, description: "Bisa dicicil beberapa set sampai target hari ini selesai." },
@@ -21,7 +21,7 @@ const dayKey = (date = new Date()) => {
 };
 
 function blankPlayer() {
-  return { dailyQuests: {} };
+  return { dailyQuests: {}, dailyStepCounts: {} };
 }
 
 function loadPlayer() {
@@ -32,12 +32,21 @@ function loadPlayer() {
     if (!saved || typeof saved !== "object" || !saved.dailyQuests || typeof saved.dailyQuests !== "object" || Array.isArray(saved.dailyQuests)) {
       throw new Error("Saved daily quest data is invalid.");
     }
+    if (saved.dailyStepCounts !== undefined && (!saved.dailyStepCounts || typeof saved.dailyStepCounts !== "object" || Array.isArray(saved.dailyStepCounts))) {
+      throw new Error("Saved daily step data is invalid.");
+    }
     const dailyQuests = {};
     for (const [date, ids] of Object.entries(saved.dailyQuests)) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Array.isArray(ids)) continue;
       dailyQuests[date] = [...new Set(ids.filter((id) => QUESTS.some((quest) => quest.id === id)))];
     }
-    return { dailyQuests };
+    const dailyStepCounts = {};
+    for (const [date, count] of Object.entries(saved.dailyStepCounts ?? {})) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isSafeInteger(count) && count >= 0) {
+        dailyStepCounts[date] = count;
+      }
+    }
+    return { dailyQuests, dailyStepCounts };
   } catch (error) {
     console.error("SoloLevelUp could not load saved daily quests.", error);
     showToast("Data quest lama nggak bisa dibaca. Checklist baru dimulai di browser ini.");
@@ -49,6 +58,10 @@ let player = loadPlayer();
 let previewRank = null;
 let toastId = null;
 let legacyProgressNotice = false;
+let trackerActive = false;
+let motionBaseline = null;
+let stepArmed = true;
+let lastStepAt = 0;
 try {
   legacyProgressNotice = !localStorage.getItem(STORAGE_KEY) && Boolean(localStorage.getItem(LEGACY_KEY));
 } catch (error) {
@@ -220,7 +233,7 @@ function renderDailyQuests(rank, completed, previewing) {
     const done = completed.includes(quest.id);
     const target = quest.target(rank);
     const row = document.createElement("article");
-    row.className = `system-quest-row${done ? " completed" : ""}`;
+    row.className = `system-quest-row${done ? " completed" : ""}${quest.id === "steps" ? " has-manual-step" : ""}`;
     row.setAttribute("role", "listitem");
     const icon = document.createElement("span");
     icon.className = "system-quest-icon";
@@ -234,7 +247,10 @@ function renderDailyQuests(rank, completed, previewing) {
     const title = document.createElement("h3");
     title.textContent = quest.title;
     const description = document.createElement("p");
-    description.textContent = quest.description;
+    description.id = `quest-description-${quest.id}`;
+    description.textContent = quest.id === "steps"
+      ? `${(player.dailyStepCounts[dayKey()] ?? 0).toLocaleString("id-ID")} / ${target.toLocaleString("id-ID")} langkah terdeteksi. ${quest.description}`
+      : quest.description;
     const targetBlock = document.createElement("div");
     targetBlock.className = "system-quest-target";
     const targetLabel = document.createElement("strong");
@@ -246,14 +262,42 @@ function renderDailyQuests(rank, completed, previewing) {
     button.className = "system-quest-action";
     button.setAttribute("aria-pressed", String(done));
     button.disabled = previewing;
-    button.textContent = previewing ? "PREVIEW" : done ? "✓ DONE" : "MARK DONE";
+    if (quest.id === "steps") {
+      button.id = "quest-action-steps";
+      button.classList.toggle("tracking", trackerActive);
+      button.setAttribute("aria-pressed", String(trackerActive));
+      button.textContent = previewing ? "PREVIEW" : trackerActive ? "JEDA TRACKING" : "MULAI TRACKING";
+    } else {
+      button.textContent = previewing ? "PREVIEW" : done ? "✓ DONE" : "MARK DONE";
+    }
     const reward = document.createElement("span");
     reward.className = "system-quest-reward";
     reward.textContent = done ? "XP CLAIMED" : "+1 XP";
-    button.addEventListener("click", () => toggleQuest(quest.id));
+    if (quest.id === "steps") {
+      button.addEventListener("click", () => {
+        if (trackerActive) pauseStepTracking();
+        else startStepTracking();
+      });
+    } else {
+      button.addEventListener("click", () => toggleQuest(quest.id));
+    }
     copy.append(indexLabel, title, description);
     targetBlock.append(targetLabel, unit);
-    row.append(icon, copy, targetBlock, reward, button);
+    if (quest.id === "steps") {
+      const actions = document.createElement("div");
+      actions.className = "system-quest-actions";
+      const doneButton = document.createElement("button");
+      doneButton.type = "button";
+      doneButton.className = "system-quest-action manual-step-action";
+      doneButton.setAttribute("aria-pressed", String(done));
+      doneButton.disabled = previewing;
+      doneButton.textContent = previewing ? "PREVIEW" : done ? "✓ DONE" : "MARK DONE";
+      doneButton.addEventListener("click", () => toggleQuest(quest.id));
+      actions.append(button, doneButton);
+      row.append(icon, copy, targetBlock, reward, actions);
+    } else {
+      row.append(icon, copy, targetBlock, reward, button);
+    }
     list.append(row);
   });
 }
@@ -338,6 +382,104 @@ function toggleQuest(id) {
   }
   renderDashboard();
   notifyProgress(previousXp, 1, wasDone);
+}
+
+function updateStepCountDisplay() {
+  const progress = progressForXp(totalXp());
+  const rank = progress.star ? RANKS.at(-1) : progress.rank;
+  const count = player.dailyStepCounts[dayKey()] ?? 0;
+  const description = $("quest-description-steps");
+  if (description) {
+    description.textContent = `${count.toLocaleString("id-ID")} / ${rank.steps.toLocaleString("id-ID")} langkah terdeteksi. ${QUESTS[0].description}`;
+  }
+}
+
+function recordStep() {
+  const today = dayKey();
+  const previousCount = player.dailyStepCounts[today] ?? 0;
+  const previousXp = totalXp();
+  const nextCount = previousCount + 1;
+  player.dailyStepCounts[today] = nextCount;
+  const progress = progressForXp(previousXp);
+  const rank = progress.star ? RANKS.at(-1) : progress.rank;
+  const completed = completedToday();
+  const completesQuest = nextCount >= rank.steps && !completed.includes("steps");
+
+  if (completesQuest) player.dailyQuests[today] = [...completed, "steps"];
+  if (!persist()) {
+    if (previousCount) player.dailyStepCounts[today] = previousCount;
+    else delete player.dailyStepCounts[today];
+    if (completesQuest) {
+      if (completed.length) player.dailyQuests[today] = completed;
+      else delete player.dailyQuests[today];
+    }
+    pauseStepTracking();
+    return;
+  }
+
+  if (completesQuest) {
+    renderDashboard();
+    notifyProgress(previousXp, 1, false);
+  } else {
+    updateStepCountDisplay();
+  }
+}
+
+function handleDeviceMotion(event) {
+  const acceleration = event.accelerationIncludingGravity;
+  if (!acceleration || ![acceleration.x, acceleration.y, acceleration.z].every(Number.isFinite)) return;
+  const magnitude = Math.hypot(acceleration.x, acceleration.y, acceleration.z);
+  if (motionBaseline === null) motionBaseline = magnitude;
+  motionBaseline += (magnitude - motionBaseline) * 0.08;
+  const signal = magnitude - motionBaseline;
+  const now = performance.now();
+
+  if (signal > 1.15 && stepArmed && now - lastStepAt >= 300) {
+    stepArmed = false;
+    lastStepAt = now;
+    recordStep();
+  } else if (signal < 0.25) {
+    stepArmed = true;
+  }
+}
+
+async function startStepTracking() {
+  if (!window.isSecureContext) {
+    showToast("Tracking langkah perlu HTTPS atau localhost.");
+    return;
+  }
+  if (!("DeviceMotionEvent" in window)) {
+    showToast("Sensor gerak tidak tersedia. Coba browser di ponsel yang mendukung.");
+    return;
+  }
+
+  try {
+    const motionEvent = window.DeviceMotionEvent;
+    if (typeof motionEvent.requestPermission === "function") {
+      const permission = await motionEvent.requestPermission();
+      if (permission !== "granted") {
+        showToast("Izin sensor gerak belum diberikan. Izinkan agar langkah bisa dihitung.");
+        return;
+      }
+    }
+    motionBaseline = null;
+    stepArmed = true;
+    lastStepAt = 0;
+    window.addEventListener("devicemotion", handleDeviceMotion);
+    trackerActive = true;
+    renderDashboard();
+    showToast("Tracking aktif. Bawa ponsel saat berjalan.");
+  } catch (error) {
+    console.error("SoloLevelUp could not start step tracking.", error);
+    showToast("Sensor gerak gagal diaktifkan. Cek izin sensor di browser.");
+  }
+}
+
+function pauseStepTracking() {
+  window.removeEventListener("devicemotion", handleDeviceMotion);
+  trackerActive = false;
+  renderDashboard();
+  showToast("Tracking dijeda. Langkah hari ini tetap tersimpan.");
 }
 
 function renderRankPreview() {
