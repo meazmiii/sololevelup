@@ -1,18 +1,20 @@
 const STORAGE_KEY = "runquest.daily-training.v1";
 const LEGACY_KEY = "runquest.player.v1";
 const RANKS = [
-  { name: "E", xpToAdvance: 100, steps: 5000, pushups: 15, situps: 15, squats: 25, accent: "#a6afc2" },
-  { name: "D", xpToAdvance: 120, steps: 7000, pushups: 25, situps: 25, squats: 50, accent: "#71d9fa" },
-  { name: "C", xpToAdvance: 140, steps: 9000, pushups: 45, situps: 45, squats: 75, accent: "#7ea9ff" },
-  { name: "B", xpToAdvance: 160, steps: 11000, pushups: 60, situps: 60, squats: 100, accent: "#ae8cff" },
-  { name: "A", xpToAdvance: 180, steps: 12500, pushups: 80, situps: 80, squats: 125, accent: "#ff91ce" },
-  { name: "S", xpToAdvance: 220, steps: 15000, pushups: 100, situps: 100, squats: 150, accent: "#ffce76" },
+  { name: "E", xpToAdvance: 150, steps: 10000, pushups: 15, situps: 15, squats: 25, sidePlank: 20, backExtensions: 10, accent: "#a6afc2" },
+  { name: "D", xpToAdvance: 180, steps: 11000, pushups: 25, situps: 25, squats: 50, sidePlank: 25, backExtensions: 15, accent: "#71d9fa" },
+  { name: "C", xpToAdvance: 210, steps: 12000, pushups: 45, situps: 45, squats: 75, sidePlank: 30, backExtensions: 20, accent: "#7ea9ff" },
+  { name: "B", xpToAdvance: 240, steps: 13000, pushups: 60, situps: 60, squats: 100, sidePlank: 40, backExtensions: 25, accent: "#ae8cff" },
+  { name: "A", xpToAdvance: 270, steps: 14000, pushups: 80, situps: 80, squats: 125, sidePlank: 50, backExtensions: 30, accent: "#ff91ce" },
+  { name: "S", xpToAdvance: 330, steps: 15000, pushups: 100, situps: 100, squats: 150, sidePlank: 60, backExtensions: 40, accent: "#ffce76" },
 ];
 const QUESTS = [
   { id: "steps", title: "Langkah kaki", icon: "↗", unit: "LANGKAH", target: (rank) => rank.steps, description: "Mulai tracking, lalu bawa ponsel saat berjalan." },
   { id: "pushups", title: "Push-up", icon: "↑", unit: "REPETISI", target: (rank) => rank.pushups, description: "Bisa dicicil beberapa set sampai target hari ini selesai." },
   { id: "situps", title: "Sit-up", icon: "⌁", unit: "REPETISI", target: (rank) => rank.situps, description: "Bisa dicicil beberapa set sampai target hari ini selesai." },
   { id: "squats", title: "Squat", icon: "↓", unit: "REPETISI", target: (rank) => rank.squats, description: "Bisa dicicil beberapa set sampai target hari ini selesai." },
+  { id: "sidePlank", title: "Side plank", icon: "◒", unit: "DETIK / SISI", target: (rank) => rank.sidePlank, description: "Tahan posisi sesuai target pada tiap sisi; boleh dibagi beberapa set." },
+  { id: "backExtensions", title: "Back extension", icon: "↟", unit: "REPETISI", target: (rank) => rank.backExtensions, description: "Bisa dicicil beberapa set; lakukan gerakan terkontrol tanpa melenting berlebihan." },
 ];
 const $ = (id) => document.getElementById(id);
 const dayKey = (date = new Date()) => {
@@ -182,8 +184,8 @@ function renderPlayerStatus(xp) {
     ? {
         rank: selectedBaseRank,
         xpIntoRank: Math.round(selectedBaseRank.xpToAdvance * 0.65),
-        xpToAdvance: selectedName === "S+" ? 220 : selectedBaseRank.xpToAdvance,
-        remainingXp: (selectedName === "S+" ? 220 : selectedBaseRank.xpToAdvance) - Math.round(selectedBaseRank.xpToAdvance * 0.65),
+        xpToAdvance: selectedBaseRank.xpToAdvance,
+        remainingXp: selectedBaseRank.xpToAdvance - Math.round(selectedBaseRank.xpToAdvance * 0.65),
         star: selectedName === "S+" ? 1 : 0,
       }
     : actual;
@@ -317,7 +319,7 @@ function renderHistory() {
     dateCell.className = "activity-name";
     dateCell.textContent = new Intl.DateTimeFormat("id-ID", { weekday: "short", day: "numeric", month: "short" }).format(new Date(`${date}T12:00:00`));
     const questCell = document.createElement("span");
-    questCell.textContent = `${completed.length} / 4 quest`;
+    questCell.textContent = `${completed.length} / ${QUESTS.length} quest`;
     const xpCell = document.createElement("span");
     xpCell.className = "activity-xp";
     xpCell.textContent = `+${completed.length} XP`;
@@ -347,7 +349,7 @@ function renderDashboard() {
   $("system-progress-bar").style.width = `${today.length / QUESTS.length * 100}%`;
   $("daily-reset-label").textContent = previewRank
     ? `PREVIEW TARGET · ${previewRank}-RANK`
-    : `${today.length} / 4 DONE · +${QUESTS.length - today.length} XP AVAILABLE`;
+    : `${today.length} / ${QUESTS.length} DONE · +${QUESTS.length - today.length} XP AVAILABLE`;
   renderPlayerStatus(xp);
   renderDailyQuests(questRank, today, Boolean(previewRank));
   renderHistory();
